@@ -1,0 +1,80 @@
+{
+  "name": "tiger_v1.0.0_sports_20261111",
+  "project": "tiger",
+  "version": "1.0.0",
+  "bump": "minor",
+  "arch": "tiger",
+  "created": "2026-11-11 10:36:54",
+  "notes": "full 5-core, 2 epochs, fp16, Colab T4",
+  "code_sha256": "b7e14aa5029d97d467be2b46d878ae8b6498d109346cfab6bd88155dc763c0d6",
+  "training_data_sha256": "4e497341b06e9d514aaed1975f10d4f11d5ed9a174e7e6275ecffdb093e6c698",
+  "data": {
+    "users": 409772,
+    "items": 156235,
+    "interactions": 3472020,
+    "seq_len": {
+      "median": 6.0,
+      "mean": 8.47,
+      "max": 682
+    },
+    "density_pct": 0.0054,
+    "test_targets_cold_pct": 0.34,
+    "train_item_count": {
+      "median": 8.0,
+      "items_never_in_train_pct": 0.23
+    },
+    "items_with_metadata_pct": 100.0
+  },
+  "category": "sports",
+  "semantic_ids": {
+    "levels": 3,
+    "codebook_size": 256,
+    "codebook_usage_pct": [
+      100.0,
+      100.0,
+      100.0
+    ],
+    "unique_full_code_pct": 82.85,
+    "max_items_per_code": 36,
+    "items_with_collision_pct": 27.77,
+    "max_collision_token": 35,
+    "purity_semantic": {
+      "prefix1_majority_category_pct": 45.1,
+      "prefix2_majority_category_pct": 76.0,
+      "chance_pct": 2.5
+    },
+    "purity_random": {
+      "prefix1_majority_category_pct": 2.7,
+      "prefix2_majority_category_pct": 32.3,
+      "chance_pct": 2.5
+    }
+  },
+  "val_recall10": 0.0165,
+  "test_recall10": 0.0143,
+  "test": {
+    "users": 20000,
+    "recall@5": 0.0095,
+    "ndcg@5": 0.0064,
+    "recall@10": 0.0143,
+    "ndcg@10": 0.0079
+  },
+  "metrics_file": "metrics.json",
+  "python": "3.13.16",
+  "soup": {
+    "torch": "2.14.1+cu130",
+    "torchvision": "0.29.1+cu130",
+    "numpy": "2.4.6",
+    "scikit-learn": "1.6.1",
+    "transformers": "5.22.1",
+    "sentence-transformers": "5.7.0"
+  },
+  "file_sha256": {
+    "items.json": "bb5fe0fd1d966246fe061f88a86f6990ab25fab5a6c5311093a7ae4d93924f11",
+    "metrics.json": "1ed6a9811cd050b12f9cc54553df149e76e6c7c513577dfff42a8fc644518c5c",
+    "rqvae.pt": "2680215e37bf4bc904878972df9c952987b6f820924714bd05782b04aa9be4a6",
+    "samples.json": "a79bdcbdb0e3f96c36c72d4d94fe3432dcd936d45cb89930d425d6a6d9d8b3cd",
+    "tiger_model/config.json": "316d3af2121a68c9103971fe4284c7a1c5039e4ab75b4d99de6fd56752c3e342",
+    "tiger_model/generation_config.json": "3e86730fbbf95c76021b894c3af32bf3500029fe2379240ca8894b1b834c6280",
+    "tiger_model/model.safetensors": "4d2656e6474d21594132e5503d2210aef42357b4121c15d48621b3f25ebc13c9"
+  }
+}

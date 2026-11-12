@@ -1,0 +1,114 @@
+{
+  "category": "sports",
+  "params_millions": 10.07,
+  "train_minutes": 5.1,
+  "val": {
+    "users": 20000,
+    "recall@5": 0.0067,
+    "ndcg@5": 0.0043,
+    "recall@10": 0.0129,
+    "ndcg@10": 0.0063
+  },
+  "test": {
+    "users": 20000,
+    "recall@5": 0.007,
+    "ndcg@5": 0.0044,
+    "recall@10": 0.012,
+    "ndcg@10": 0.006
+  },
+  "test_cold": {
+    "users": 78,
+    "recall@5": 0.0,
+    "ndcg@5": 0.0,
+    "recall@10": 0.0,
+    "ndcg@10": 0.0
+  },
+  "test_warm": {
+    "users": 19922,
+    "recall@5": 0.007,
+    "ndcg@5": 0.0044,
+    "recall@10": 0.0121,
+    "ndcg@10": 0.006
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.1445,
+      "seconds": 19.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.0105,
+      "seconds": 18.0
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.9188,
+      "seconds": 18.0
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.846,
+      "seconds": 18.5
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.7893,
+      "seconds": 18.2,
+      "val_recall@10": 0.014
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.7433,
+      "seconds": 18.0
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.7045,
+      "seconds": 18.3
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.6709,
+      "seconds": 18.3
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.6416,
+      "seconds": 18.0
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.6164,
+      "seconds": 18.3,
+      "val_recall@10": 0.008
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5939,
+      "seconds": 18.4
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.5731,
+      "seconds": 18.1
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.5545,
+      "seconds": 18.3
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.5387,
+      "seconds": 18.5
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.5239,
+      "seconds": 18.1,
+      "val_recall@10": 0.009
+    }
+  ],
+  "note": "re-run with the fixed SASRec (no key-padding mask); same split and evaluation users as the TIGER run"
+}

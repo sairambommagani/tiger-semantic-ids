@@ -1,0 +1,80 @@
+{
+  "name": "tiger_v1.0.0_toys_20261111",
+  "project": "tiger",
+  "version": "1.0.0",
+  "bump": "minor",
+  "arch": "tiger",
+  "created": "2026-11-11 13:19:39",
+  "notes": "full 5-core, 1 epoch, fp16, Colab T4",
+  "code_sha256": "f310b7d193a2924c76549fb1b1703733d17e711e1c09ed1a318b1bba3309c35d",
+  "training_data_sha256": "0b9a382be86a008844a52a34a494b48ee5ada7a9669e8a784670a43623322920",
+  "data": {
+    "users": 432264,
+    "items": 162035,
+    "interactions": 3861886,
+    "seq_len": {
+      "median": 7.0,
+      "mean": 8.93,
+      "max": 2616
+    },
+    "density_pct": 0.0055,
+    "test_targets_cold_pct": 0.33,
+    "train_item_count": {
+      "median": 9.0,
+      "items_never_in_train_pct": 0.23
+    },
+    "items_with_metadata_pct": 100.0
+  },
+  "category": "toys",
+  "semantic_ids": {
+    "levels": 3,
+    "codebook_size": 256,
+    "codebook_usage_pct": [
+      100.0,
+      100.0,
+      100.0
+    ],
+    "unique_full_code_pct": 87.38,
+    "max_items_per_code": 34,
+    "items_with_collision_pct": 20.58,
+    "max_collision_token": 33,
+    "purity_semantic": {
+      "prefix1_majority_category_pct": 48.2,
+      "prefix2_majority_category_pct": 70.6,
+      "chance_pct": 8.8
+    },
+    "purity_random": {
+      "prefix1_majority_category_pct": 8.8,
+      "prefix2_majority_category_pct": 33.8,
+      "chance_pct": 8.8
+    }
+  },
+  "val_recall10": 0.0116,
+  "test_recall10": 0.008,
+  "test": {
+    "users": 20000,
+    "recall@5": 0.0055,
+    "ndcg@5": 0.0037,
+    "recall@10": 0.008,
+    "ndcg@10": 0.0045
+  },
+  "metrics_file": "metrics.json",
+  "python": "3.13.16",
+  "soup": {
+    "torch": "2.14.1+cu130",
+    "torchvision": "0.29.1+cu130",
+    "numpy": "2.4.6",
+    "scikit-learn": "1.6.1",
+    "transformers": "5.22.1",
+    "sentence-transformers": "5.7.0"
+  },
+  "file_sha256": {
+    "items.json": "5bf016dc855fd013382e84edb8c8e13e159eddd3df8da7980cd556ce1ca04771",
+    "metrics.json": "88c62ad0f4f3f464c6b2500d302c5d67de8677ea8de681a9a999d76cea0e5637",
+    "rqvae.pt": "949266049c5b5a22cbc91ca017fa881c1ed43f1375588bb8ea3242be2c9b9a79",
+    "samples.json": "c2a9eb206c18eb3fc45a2d8dc8604220fe563d755ab50f39575b30422f85c2aa",
+    "tiger_model/config.json": "316d3af2121a68c9103971fe4284c7a1c5039e4ab75b4d99de6fd56752c3e342",
+    "tiger_model/generation_config.json": "3e86730fbbf95c76021b894c3af32bf3500029fe2379240ca8894b1b834c6280",
+    "tiger_model/model.safetensors": "03925921b70d726d93a6d24d0f5c2d8ef3e03db25572e2435f4a4bc51281b50d"
+  }
+}

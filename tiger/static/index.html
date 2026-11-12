@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semantic ID Recommender</title>
+<style>
+  :root { --bg:#f6f6f4; --panel:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#dcdcd8; --accent:#2f4a6d; --warnbg:#fbf3e4; --warn:#7a5a1d; --hit:#e8efe6; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
+  header { padding:16px 28px; background:var(--panel); border-bottom:1px solid var(--line); }
+  header h1 { margin:0; font-size:20px; font-weight:600; }
+  header p { margin:2px 0 0; color:var(--muted); font-size:13px; }
+  main { display:grid; grid-template-columns:420px 1fr; gap:20px; padding:20px 28px; max-width:1300px; margin:0 auto; }
+  @media (max-width:900px) { main { grid-template-columns:1fr; padding:16px; } }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px; min-width:0; }
+  h2 { font-size:13px; margin:0 0 12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; }
+  input[type=text], select { font:inherit; padding:7px 9px; border:1px solid var(--line); border-radius:6px; width:100%; }
+  .btn { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:8px 14px; border-radius:6px; cursor:pointer; font:inherit; }
+  .btn.sec { background:#fff; color:var(--accent); padding:3px 8px; font-size:12px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .note { font-size:12px; color:var(--muted); }
+  .msg { border:1px solid var(--line); background:var(--warnbg); color:var(--warn); border-radius:8px; padding:10px 12px; margin-top:10px; font-size:13px; }
+  .list { list-style:none; margin:8px 0 0; padding:0; }
+  .list li { display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-bottom:1px solid var(--line); }
+  .list li.hit { background:var(--hit); }
+  .sid { font-family:ui-monospace,Consolas,monospace; font-size:12px; color:var(--accent); white-space:nowrap; }
+  .t { flex:1; min-width:0; }
+  .t div:first-child { overflow:hidden; text-overflow:ellipsis; }
+  .rank { width:22px; color:var(--muted); text-align:right; }
+  .row { display:flex; gap:8px; margin:8px 0; }
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  td.n, th.n { text-align:right; }
+  .full { grid-column:1 / -1; }
+  .spin { display:inline-block; width:12px; height:12px; border:2px solid var(--line); border-top-color:var(--accent); border-radius:50%; animation:s .8s linear infinite; vertical-align:middle; }
+  @keyframes s { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Generative retrieval with semantic IDs (TIGER)</h1>
+  <p id="sub">Amazon Reviews 2023. The model generates the next item's semantic ID token by token. Research prototype.</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Purchase history</h2>
+    <select id="sample"><option value="">Load a held-out user...</option></select>
+    <div class="row"><input type="text" id="q" placeholder="or search items to add (title, brand)"><button class="btn sec" id="find">Search</button></div>
+    <ul class="list" id="results"></ul>
+    <ul class="list" id="hist"><li class="note">No items yet.</li></ul>
+    <div class="row"><button class="btn" id="go" disabled>Recommend next items</button><button class="btn sec" id="clear">Clear</button></div>
+    <p class="note" id="target"></p>
+  </section>
+  <section class="panel">
+    <h2>Recommendations</h2>
+    <div id="out" class="note">Build a history, then generate. Each item is shown with its semantic ID (c1-c2-c3-collision): items that share the first codes are similar.</div>
+  </section>
+  <section class="panel full">
+    <h2>Results (held-out users, full ranking)</h2>
+    <div class="scroll" id="perf"><span class="spin"></span></div>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sid = s => s.join('-');
+let hist = [], target = null, samples = [];
+const draw = () => {
+  $('hist').innerHTML = hist.length ? hist.map((it, i) => `<li><span class="rank">${i + 1}</span><div class="t"><div>${esc(it.title || it.asin)}</div><div class="note">${esc(it.brand)} · ${esc(it.category)}</div></div><span class="sid">${sid(it.semantic_id)}</span><button class="btn sec" data-i="${i}">x</button></li>`).join('') : '<li class="note">No items yet.</li>';
+  $('hist').querySelectorAll('button').forEach(b => b.onclick = () => { hist.splice(+b.dataset.i, 1); target = null; $('target').textContent = ''; draw(); });
+  $('go').disabled = !hist.length;
+};
+$('clear').onclick = () => { hist = []; target = null; $('target').textContent = ''; $('sample').value = ''; draw(); };
+$('find').onclick = async () => {
+  const q = $('q').value.trim(); if (q.length < 2) return;
+  const r = await (await fetch('/search?q=' + encodeURIComponent(q))).json();
+  $('results').innerHTML = r.length ? r.slice(0, 8).map((it, i) => `<li><div class="t"><div>${esc(it.title)}</div><div class="note">${esc(it.brand)} · bought ${it.train_count}x in training</div></div><span class="sid">${sid(it.semantic_id)}</span><button class="btn sec" data-i="${i}">add</button></li>`).join('') : '<li class="note">No match.</li>';
+  $('results').querySelectorAll('button').forEach(b => b.onclick = () => { hist.push(r[+b.dataset.i]); target = null; $('target').textContent = ''; $('results').innerHTML = ''; draw(); });
+};
+$('q').onkeydown = e => { if (e.key === 'Enter') $('find').click(); };
+$('sample').onchange = () => {
+  const s = samples[+$('sample').value]; if (!s) return;
+  hist = s.history_items.slice(); target = s.target_item; draw();
+  $('target').innerHTML = target ? `This user actually bought next: <b>${esc(target.title)}</b> <span class="sid">${sid(target.semantic_id)}</span>${s.target_cold ? ' (an item never seen in training)' : ''}` : '';
+};
+$('go').onclick = async () => {
+  $('go').disabled = true; $('out').innerHTML = '<span class="spin"></span> generating...';
+  try {
+    const r = await fetch('/recommend', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ history: hist.map(h => h.asin), k: 10 }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : JSON.stringify(j.detail));
+    let h = '<ul class="list">' + j.recommendations.map(it => `<li class="${target && it.asin === target.asin ? 'hit' : ''}"><span class="rank">${it.rank}</span><div class="t"><div>${esc(it.title || it.asin)}${target && it.asin === target.asin ? ' <b>(the actual next item)</b>' : ''}</div><div class="note">${esc(it.brand)} · ${esc(it.category)}${it.shares_first_code_with_history ? ' · same first code as the history' : ''}</div></div><span class="sid">${sid(it.semantic_id)}</span></li>`).join('') + '</ul>';
+    if (target) h += `<p class="note">${j.recommendations.some(it => it.asin === target.asin) ? 'The item the user really bought next is in the top 10.' : 'The item the user really bought next is not in the top 10 (Recall@10 is far from 1 for every model on this data).'}</p>`;
+    h += `<p class="note">${esc(j.reliability)}. ${j.seconds} s on CPU. Model ${esc(j.model_version)}. ${esc(j.disclaimer)}</p>`;
+    $('out').innerHTML = h;
+  } catch (e) { $('out').innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+  finally { $('go').disabled = !hist.length; }
+};
+(async () => {
+  try {
+    samples = await (await fetch('/samples')).json();
+    samples.forEach((s, i) => { const o = document.createElement('option'); o.value = i; o.textContent = `Held-out user ${i + 1} (${s.history_items.length} items)`; $('sample').appendChild(o); });
+  } catch (e) {}
+  try {
+    const r = await fetch('/model-info'); const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || r.statusText);
+    const m = j.metrics, res = m.results, si = m.semantic_ids;
+    $('sub').textContent = `Amazon Reviews 2023: ${m.category_name}, ${m.data.users.toLocaleString()} users, ${m.data.items.toLocaleString()} items. The model generates the next item's semantic ID token by token. Research prototype.`;
+    let h = '<table><tr><th>Model</th><th class="n">Recall@5</th><th class="n">Recall@10</th><th class="n">NDCG@5</th><th class="n">NDCG@10</th></tr>';
+    for (const [k, v] of Object.entries(res)) {
+      const t = v.test, f = x => x === null || x === undefined ? '-' : x.toFixed(4);
+      h += `<tr><td>${k === 'tiger' ? '<b>TIGER (deployed)</b>' : k === 'sasrec' ? 'SASRec' : k === 'popularity' ? 'Popularity' : esc(k)}</td><td class="n">${f(t['recall@5'])}</td><td class="n">${f(t['recall@10'])}</td><td class="n">${f(t['ndcg@5'])}</td><td class="n">${f(t['ndcg@10'])}</td></tr>`;
+    }
+    h += `</table><p class="note">${res.tiger.test.users.toLocaleString()} held-out users, last item as target, ranked against all items. Semantic IDs: ${si.levels} codebooks of ${si.codebook_size} + a collision token; ${si.unique_full_code_pct}% of items have a unique code without it.</p>`;
+    $('perf').innerHTML = h;
+  } catch (e) { $('perf').innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+})();
+</script>
+</body>
+</html>

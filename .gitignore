@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+artifacts/
+*.csv.gz
+*.jsonl.gz
+.pytest_cache/
+*.zip
+*.mp4
+.ipynb_checkpoints/
+artifacts_*/
+drive_tmp/

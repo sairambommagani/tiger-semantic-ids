@@ -1,0 +1,80 @@
+{
+  "name": "tiger_v1.0.0_beauty_20261111",
+  "project": "tiger",
+  "version": "1.0.0",
+  "bump": "minor",
+  "arch": "tiger",
+  "created": "2026-11-11 11:55:49",
+  "notes": "full 5-core, 2 epochs, fp16, Colab T4",
+  "code_sha256": "b7e14aa5029d97d467be2b46d878ae8b6498d109346cfab6bd88155dc763c0d6",
+  "training_data_sha256": "41cee45cd6b098d6606b85f71b8710de68e95ec9dfb10b1b530db8f42f2c7fe4",
+  "data": {
+    "users": 729576,
+    "items": 207649,
+    "interactions": 6624441,
+    "seq_len": {
+      "median": 7.0,
+      "mean": 9.08,
+      "max": 2351
+    },
+    "density_pct": 0.0044,
+    "test_targets_cold_pct": 0.14,
+    "train_item_count": {
+      "median": 10.0,
+      "items_never_in_train_pct": 0.13
+    },
+    "items_with_metadata_pct": 100.0
+  },
+  "category": "beauty",
+  "semantic_ids": {
+    "levels": 3,
+    "codebook_size": 256,
+    "codebook_usage_pct": [
+      100.0,
+      100.0,
+      100.0
+    ],
+    "unique_full_code_pct": 86.36,
+    "max_items_per_code": 44,
+    "items_with_collision_pct": 22.51,
+    "max_collision_token": 43,
+    "purity_semantic": {
+      "prefix1_majority_category_pct": 60.8,
+      "prefix2_majority_category_pct": 78.4,
+      "chance_pct": 2.8
+    },
+    "purity_random": {
+      "prefix1_majority_category_pct": 3.1,
+      "prefix2_majority_category_pct": 28.6,
+      "chance_pct": 2.8
+    }
+  },
+  "val_recall10": 0.0177,
+  "test_recall10": 0.016,
+  "test": {
+    "users": 20000,
+    "recall@5": 0.01,
+    "ndcg@5": 0.0066,
+    "recall@10": 0.016,
+    "ndcg@10": 0.0085
+  },
+  "metrics_file": "metrics.json",
+  "python": "3.13.16",
+  "soup": {
+    "torch": "2.14.1+cu130",
+    "torchvision": "0.29.1+cu130",
+    "numpy": "2.4.6",
+    "scikit-learn": "1.6.1",
+    "transformers": "5.22.1",
+    "sentence-transformers": "5.7.0"
+  },
+  "file_sha256": {
+    "items.json": "87b51dde7f4fdf23354bed26ec5012c8a67f5b0146afd5972b365a7650a34bf9",
+    "metrics.json": "e9625e19464a8f08b77485883037847dd384a03299805bba6a7cad7cef27c20a",
+    "rqvae.pt": "283ee75bc9fee181240525146ba5510f4902effca69155eea4fc09d8d3450c46",
+    "samples.json": "e6a83befbde70937a6aeaa056ed094aebe55fd65d83d476f86b901c97a249b61",
+    "tiger_model/config.json": "316d3af2121a68c9103971fe4284c7a1c5039e4ab75b4d99de6fd56752c3e342",
+    "tiger_model/generation_config.json": "3e86730fbbf95c76021b894c3af32bf3500029fe2379240ca8894b1b834c6280",
+    "tiger_model/model.safetensors": "485da75bc6c4e02ca046e728220c7f72f9bfb71574b28ac41c50c7a31d19b097"
+  }
+}
